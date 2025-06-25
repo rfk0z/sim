@@ -17,6 +17,7 @@
     "dependencies": {
         "@alpinejs/collapse": "^3.14.9",
         "@tailwindcss/vite": "^4.0.6",
+        "alpinejs": "^3.14.9",
         "chart.js": "^4.5.0"
     }
 }

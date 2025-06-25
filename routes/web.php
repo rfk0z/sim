@@ -27,8 +27,12 @@ Route::get('/', [BerandaController::class, 'index'])->name('Beranda');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post');
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    // Register Mahasiswa
+    Route::get('/register/mahasiswa', [AuthController::class, 'showMahasiswaRegistrationForm'])->name('register.mahasiswa');
+    Route::post('/register/mahasiswa', [AuthController::class, 'registerMahasiswa']);
+
+    Route::get('/register/dosen', [AuthController::class, 'showDosenRegistrationForm'])->name('register.dosen');
+    Route::post('/register/dosen', [AuthController::class, 'registerDosen']);
 
     // Socialite rute
     Route::get('/auth/google', [SocialiteController::class, 'redirect'])->name('google.redirect');

@@ -14,15 +14,15 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('users')->delete();
-        
+
         \DB::table('users')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id_user' => 1,
-                'username' => 'admin3',
+                'username' => 'rey',
                 'email' => 'admin@example.com',
                 'password' => '$2y$12$3mXR/wwE8YnTpsz8F74ne.m1DDpa.di7BqSjPjkJevXBqh.dDyRlm',
                 'role' => 1,
@@ -31,10 +31,10 @@ class UsersTableSeeder extends Seeder
                 'created_at' => '2025-06-23 18:08:19',
                 'updated_at' => '2025-06-24 14:57:06',
             ),
-            1 => 
+            1 =>
             array (
                 'id_user' => 2,
-                'username' => 'dosen2',
+                'username' => 'rey',
                 'email' => 'dosen1@example.com',
                 'password' => '$2y$12$3mXR/wwE8YnTpsz8F74ne.m1DDpa.di7BqSjPjkJevXBqh.dDyRlm',
                 'role' => 2,
@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => '2025-06-23 18:08:19',
                 'updated_at' => '2025-06-24 14:42:00',
             ),
-            2 => 
+            2 =>
             array (
                 'id_user' => 3,
                 'username' => 'mahasiswa1',
@@ -56,7 +56,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => '2025-06-23 18:08:19',
             ),
         ));
-        
-        
+
+
     }
 }

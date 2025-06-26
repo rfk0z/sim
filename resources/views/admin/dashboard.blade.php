@@ -96,16 +96,8 @@
             </div>
         </div>
 
-        {{-- Aktivitas --}}
-        <div class="md:col-span-3 bg-white p-5 rounded-2xl shadow">
-            <h2 class="text-lg font-semibold mb-4">Aktivitas</h2>
-            <div class="w-full h-80 relative">
-                {{-- segala macam bentuk notifikasi --}}
-            </div>
-        </div>
-
         {{-- Statistik Tambahan --}}
-        <div class="md:col-span-4 bg-white p-5 rounded-2xl shadow">
+        <div class="md:col-span-3 bg-white p-5 rounded-2xl shadow">
             <h2 class="text-lg font-semibold">Statistik Pengguna</h2>
             <div class="w-full h-80 relative">
                 <canvas id="keuanganChart" class="absolute inset-0 w-full h-full"></canvas>

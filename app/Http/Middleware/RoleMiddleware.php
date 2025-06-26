@@ -13,6 +13,7 @@ class RoleMiddleware
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  int  $requiredRole
      */
     public function handle(Request $request, Closure $next, $requiredRole): Response
     {
@@ -21,21 +22,22 @@ class RoleMiddleware
             return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $userRole = Auth::user()->role;
+        $user = Auth::user();
+        $currentRole = $user->role;
 
-        // Konversi role string menjadi angka jika dibutuhkan
-        $requiredRole = (int) $requiredRole;
+        // Konversi ke integer untuk memastikan
+        $requiredRole = (int)$requiredRole;
 
-        if ($userRole !== $requiredRole) {
-            switch ($userRole) {
+        if ($currentRole !== $requiredRole) {
+            switch ($currentRole) {
                 case 1: // Admin
-                    return redirect('/admin/dashboard')->with('error', 'Anda adalah admin dan tidak diizinkan mengakses halaman ini.');
+                    return redirect('/admin/dashboard')->with('error', 'Akses terbatas untuk admin.');
                 case 2: // Dosen
-                    return redirect('/dosen/dashboard')->with('error', 'Anda adalah dosen dan tidak diizinkan mengakses halaman ini.');
+                    return redirect('/dosen/dashboard')->with('error', 'Akses terbatas untuk dosen.');
                 case 3: // Mahasiswa
-                    return redirect('/mahasiswa/dashboard')->with('error', 'Anda adalah mahasiswa dan tidak diizinkan mengakses halaman ini.');
+                    return redirect('/mhs/dashboard')->with('error', 'Akses terbatas untuk mahasiswa.');
                 default:
-                    return redirect('/')->with('error', 'Role Anda tidak dikenali. Akses ditolak.');
+                    return redirect('/')->with('error', 'Role tidak dikenali. Akses ditolak.');
             }
         }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -95,7 +96,7 @@ class AuthController extends Controller
             'username' => $request->nim,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 3, // Mahasiswa
+            'role' => 3,
         ]);
 
         Mahasiswa::create([
@@ -126,7 +127,7 @@ class AuthController extends Controller
             'username' => $request->nidn,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 2, // Dosen
+            'role' => 2,
         ]);
 
         Dosen::create([

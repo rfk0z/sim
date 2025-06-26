@@ -19,17 +19,42 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center space-x-8 font-semibold text-sm tracking-wide">
             <x-nav-link href="/" :active="request()->is('/')">Beranda</x-nav-link>
-            <x-nav-link href="/profil-prodi" :active="request()->is('profil-prodi')">Profil Prodi</x-nav-link>
+            <x-nav-link href="/profil-ubsi" :active="request()->is('profil-prodi')">Profil Kampus</x-nav-link>
 
-            <x-nav-link :dropdown="true" :active="request()->is('user/bimbingan/*')" label="Bimbingan Online" :items="[
-                ['label' => 'Pengajuan Judul', 'href' => route('pengajuan')],
-                ['label' => 'Jadwal Bimbingan', 'href' => route('jadwal')],
-            ]" />
+            @php
+                $bimbinganRoute = '';
+                $bimbinganItems = [];
+                switch(Auth::user()->role ?? 0) {
+                    case 1:
+                        $bimbinganRoute = 'admin/bimbingan/*';
+                        $bimbinganItems = [
+                            ['label' => 'Pengajuan Judul', 'href' => '/admin/bimbingan']
+                        ];
+                        break;
+                    case 2:
+                        $bimbinganRoute = 'dosen/bimbingan/*';
+                        $bimbinganItems = [
+                            ['label' => 'Pengajuan Judul', 'href' => '/dosen/bimbingan']
+                        ];
+                        break;
+                    case 3:
+                        $bimbinganRoute = 'mhs/bimbingan/*';
+                        $bimbinganItems = [
+                            ['label' => 'Pengajuan Judul', 'href' => '/mhs/bimbingan']
+                        ];
+                        break;
+                    default:
+                        $bimbinganRoute = 'user/bimbingan/*';
+                        $bimbinganItems = [
+                            ['label' => 'Pengajuan Judul', 'href' => '/login']
+                        ];
+                }
+            @endphp
+
+            <x-nav-link :dropdown="true" :active="request()->is($bimbinganRoute)" label="Bimbingan Online" :items="$bimbinganItems" />
 
             <x-nav-link :dropdown="true" :active="request()->is('informasi/*')" label="Informasi" :items="[
-                ['label' => 'Pengumuman', 'href' => '/informasi/pengumuman'],
-                ['label' => 'Berita Kampus', 'href' => '/informasi/berita'],
-                ['label' => 'Peraturan Skripsi', 'href' => route('peraturan')],
+                ['label' => 'Pengumuman', 'href' => '/pengumuman'],
             ]" />
         </div>
 
@@ -58,7 +83,24 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
                         <p class="text-sm text-gray-600 truncate max-w-full">{{ Auth::user()->email }}</p>
                     </div>
 
-                    <a href="{{ route('profile.edit') }}"
+                    @php
+                        $profileRoute = '';
+                        switch(Auth::user()->role) {
+                            case 1:
+                                $profileRoute = '/admin/profil';
+                                break;
+                            case 2:
+                                $profileRoute = '/dosen/profil';
+                                break;
+                            case 3:
+                                $profileRoute = '/mhs/profil';
+                                break;
+                            default:
+                                $profileRoute = '/profil';
+                        }
+                    @endphp
+
+                    <a href="{{ $profileRoute }}"
                         class="block w-full text-center bg-[#D9A553] text-white font-semibold py-2 rounded-lg hover:bg-[#c99549] hover:scale-105 transition">
                         Edit Profil
                     </a>
@@ -103,11 +145,35 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
         class="md:hidden mt-4 bg-white/90 text-black font-semibold space-y-4 py-4 px-4 rounded-lg shadow-lg">
         <a href="/" class="block hover:text-[#D9A553] transition">Beranda</a>
         <a href="/profil-prodi" class="block hover:text-[#D9A553] transition">Profil Prodi</a>
-        <a href="{{ route('pengajuan') }}" class="block hover:text-[#D9A553] transition">Pengajuan Judul</a>
-        <a href="{{ route('jadwal') }}" class="block hover:text-[#D9A553] transition">Jadwal Bimbingan</a>
         <a href="/informasi/berita" class="block hover:text-[#D9A553] transition">Berita Kampus</a>
         <a href="{{ route('peraturan') }}" class="block hover:text-[#D9A553] transition">Peraturan Skripsi</a>
+
         @auth
+            @php
+                $mobileProfileRoute = '';
+                $mobileBimbinganRoute = '';
+                switch(Auth::user()->role) {
+                    case 1:
+                        $mobileProfileRoute = '/admin/profil';
+                        $mobileBimbinganRoute = '/admin/bimbingan';
+                        break;
+                    case 2:
+                        $mobileProfileRoute = '/dosen/profil';
+                        $mobileBimbinganRoute = '/dosen/bimbingan';
+                        break;
+                    case 3:
+                        $mobileProfileRoute = '/mhs/profil';
+                        $mobileBimbinganRoute = '/mhs/bimbingan';
+                        break;
+                    default:
+                        $mobileProfileRoute = '/profil';
+                        $mobileBimbinganRoute = '/login';
+                }
+            @endphp
+
+            <a href="{{ $mobileBimbinganRoute }}" class="block hover:text-[#D9A553] transition">Pengajuan Judul</a>
+            <a href="{{ $mobileProfileRoute }}" class="block hover:text-[#D9A553] transition">Edit Profil</a>
+
             <form method="POST" action="/logout">
                 @csrf
                 <button class="block w-full bg-red-500 text-white py-2 rounded-lg hover:scale-105 transition">Logout</button>

@@ -192,7 +192,7 @@
                             <p class="text-base sm:text-lg text-[#F3F3E0]/90 mb-6 sm:mb-8 leading-relaxed">
                                 Lakukan konsultasi dengan dosen pembimbing secara online, jadwal fleksibel dengan sistem monitoring yang terstruktur.
                             </p>
-                            <a href="/konsultasi-online"
+                            <a href="/register"
                                 class="inline-block bg-[#F3F3E0] text-[#27548A] font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
                                 Mulai Konsultasi
                             </a>
@@ -211,58 +211,31 @@
                             <p class="text-base sm:text-lg text-[#F3F3E0]/90 mb-6 sm:mb-8 leading-relaxed">
                                 Kelola semua dokumen tugas akhir Anda dengan mudah, upload revisi, dan dapatkan feedback dari pembimbing.
                             </p>
-                            <a href="/manajemen-dokumen"
-                                class="inline-block bg-[#F3F3E0] text-slate-700 font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
-                                Kelola Dokumen
-                            </a>
+                            @auth
+                                @if(auth()->user()->role == 1)
+                                    <a href="/admin/bimbingan"
+                                        class="inline-block bg-[#F3F3E0] text-slate-700 font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
+                                        Kelola Dokumen
+                                    </a>
+                                @elseif(auth()->user()->role == 2)
+                                    <a href="/dosen/bimbingan"
+                                        class="inline-block bg-[#F3F3E0] text-slate-700 font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
+                                        Kelola Dokumen
+                                    </a>
+                                @elseif(auth()->user()->role == 3)
+                                    <a href="/mhs/bimbingan"
+                                        class="inline-block bg-[#F3F3E0] text-slate-700 font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
+                                        Kelola Dokumen
+                                    </a>
+                                @endif
+                            @else
+                                <a href="/login"
+                                    class="inline-block bg-[#F3F3E0] text-slate-700 font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
+                                    Kelola Dokumen
+                                </a>
+                            @endauth
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- News Section -->
-        <section id="berita" class="py-16 sm:py-20 bg-[#F3F3E0]">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12 sm:mb-16">
-                    <h2 class="text-3xl sm:text-4xl font-bold text-[#27548A] mb-3 sm:mb-4">INFORMASI TERBARU</h2>
-                    <p class="text-base sm:text-lg text-slate-700">Pengumuman dan informasi terkini seputar bimbingan tugas akhir</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    @foreach ($berita as $item)
-                        <div class="bg-gradient-to-br from-white to-slate-50 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full border border-white/50 hover:scale-105 transform backdrop-blur-sm">
-                            <img class="h-48 w-full object-cover" src="{{ asset('storage/' . $item->gambar_cover) }}" alt="Foto Berita">
-                            <div class="p-6 flex flex-col justify-between flex-grow">
-                                <div>
-                                    <p class="text-sm text-[#27548A] mb-3 font-medium">Diterbitkan pada {{ \Carbon\Carbon::parse($item->tanggal_publish)->translatedFormat('d F Y') }}</p>
-                                    <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-3 line-clamp-2 leading-tight">{{ $item->judul_berita }}</h3>
-                                    <p class="text-sm sm:text-base text-slate-600 mb-4 line-clamp-3 leading-relaxed">
-                                        {{ Str::limit(strip_tags($item->isi_berita), 120) }}
-                                    </p>
-                                </div>
-                                <div class="mt-auto">
-                                    <a href="{{ route('index.berita', $item->id_berita) }}"
-                                        class="text-[#27548A] hover:text-[#1e4470] text-sm sm:text-base font-bold hover:underline flex items-center transition-colors duration-300">
-                                        Baca Selengkapnya
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="mt-12 sm:mt-16 text-center">
-                    <a href="{{ route('index.berita') }}"
-                        class="inline-flex items-center gap-3 px-10 py-4 sm:px-12 sm:py-5 bg-gradient-to-r from-[#27548A] to-[#1e4470] text-[#F3F3E0] text-base sm:text-lg font-bold rounded-full hover:shadow-2xl transition-all duration-500 transform hover:scale-105 backdrop-blur-sm border border-white/20">
-                        Lihat Informasi Lainnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                    </a>
                 </div>
             </div>
         </section>

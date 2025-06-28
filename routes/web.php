@@ -24,7 +24,7 @@ use App\Http\Controllers\Dosen\{
     KomentarBimbinganController,
 };
 
-use App\Http\Controllers\mhs\{
+use App\Http\Controllers\Mhs\{
     DashboardMhsController,
     MhsBimbinganController,
     KomentarMahasiswaController,

@@ -9,21 +9,21 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UsersTableSeeder::class,
+            // Basic setup tables first
             TahunAjarTableSeeder::class,
             ProgramStudiTableSeeder::class,
+
+            // User-related tables
+            UsersTableSeeder::class,
             DosensTableSeeder::class,
             MahasiswasTableSeeder::class,
+
+            // Then the tables that depend on users
             BimbinganTableSeeder::class,
+
+            // Finally tables that depend on bimbingan
             DokumenTableSeeder::class,
+            KomentarBimbinganTableSeeder::class,
         ]);
-        $this->call(UsersTableSeeder::class);
-        $this->call(TahunAjarTableSeeder::class);
-        $this->call(ProgramStudiTableSeeder::class);
-        $this->call(DokumenTableSeeder::class);
-        $this->call(BimbinganTableSeeder::class);
-        $this->call(DosensTableSeeder::class);
-        $this->call(MahasiswasTableSeeder::class);
-        $this->call(KomentarBimbinganTableSeeder::class);
     }
 }

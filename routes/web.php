@@ -43,28 +43,6 @@ Route::get('/ubsi', [ProfilebsiController::class, 'index'])->name('peraturan');
 
 /*
 |--------------------------------------------------------------------------
-| RUTE TAMU (Belum Login)
-|--------------------------------------------------------------------------
-| Rute khusus untuk pengguna yang belum melakukan autentikasi
-*/
-Route::middleware('guest')->group(function () {
-    // Halaman Login
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post');
-
-    // Halaman Registrasi
-    Route::get('/register/mahasiswa', [AuthController::class, 'showMahasiswaRegistrationForm'])->name('register.mahasiswa');
-    Route::post('/register/mahasiswa', [AuthController::class, 'registerMahasiswa']);
-    Route::get('/register/dosen', [AuthController::class, 'showDosenRegistrationForm'])->name('register.dosen');
-    Route::post('/register/dosen', [AuthController::class, 'registerDosen']);
-
-    // Autentikasi Social Media
-    Route::get('/auth/google', [SocialiteController::class, 'redirect'])->name('google.redirect');
-    Route::get('/auth/google/callback', [SocialiteController::class, 'callback'])->name('google.callback');
-});
-
-/*
-|--------------------------------------------------------------------------
 | RUTE TERAUTENTIKASI
 |--------------------------------------------------------------------------
 | Rute yang memerlukan login untuk mengakses

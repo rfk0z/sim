@@ -6,7 +6,6 @@ use App\Http\Controllers\{
     Auth\AuthController,
     BerandaController,
     PengumumanController,
-    BeritaController,
     ProfilebsiController,
     DashboardController,
     SocialiteController,
@@ -40,8 +39,7 @@ use App\Http\Controllers\mhs\{
 */
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/profil-ubsi', [ProfilebsiController::class, 'index'])->name('profil.index');
-Route::get('/berita', [BeritaController::class, 'index'])->name('index.berita');
-Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+Route::get('/ubsi', [ProfilebsiController::class, 'index'])->name('peraturan');
 
 /*
 |--------------------------------------------------------------------------
@@ -67,17 +65,6 @@ Route::middleware('guest')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| RUTE UMUM MAHASISWA (Tanpa Autentikasi)
-|--------------------------------------------------------------------------
-*/
-Route::prefix('mhs')->group(function () {
-    Route::get('/pengajuan', [BeritaController::class, 'show'])->name('pengajuan');
-    Route::get('/jadwal', [BeritaController::class, 'show'])->name('jadwal');
-    Route::get('/peraturan', [BeritaController::class, 'show'])->name('peraturan');
-});
-
-/*
-|--------------------------------------------------------------------------
 | RUTE TERAUTENTIKASI
 |--------------------------------------------------------------------------
 | Rute yang memerlukan login untuk mengakses
@@ -88,9 +75,9 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| RUTE ADMIN
+| RUTE ADMIN - TAMBAHAN UNTUK EDIT METHODS
 |--------------------------------------------------------------------------
-| Rute khusus untuk pengguna dengan role admin (role:1)
+| Tambahkan route ini ke dalam middleware group admin yang sudah ada
 */
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // Dashboard Admin
@@ -101,16 +88,42 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::post('/profil', [UserProfileController::class, 'update'])->name('profile.update');
 
     // Manajemen Pengguna
-    Route::get('/users', [UserController::class, 'showlist'])->name('user.list.index');
-    Route::post('/users/create', [UserController::class, 'create'])->name('user.create');
-    Route::put('/users/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::get('/users/{id}/show', [UserController::class, 'showid'])->name('user.show');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+
+    // Create routes
+    Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    Route::get('/users/create/admin', [UserController::class, 'createAdmin'])->name('admin.users.create.admin');
+    Route::get('/users/create/dosen', [UserController::class, 'createDosen'])->name('admin.users.create.dosen');
+    Route::get('/users/create/mahasiswa', [UserController::class, 'createMahasiswa'])->name('admin.users.create.mahasiswa');
+
+    // Store routes
+    Route::post('/users/store', [UserController::class, 'store'])->name('admin.store');
+    Route::post('/users/store/admin', [UserController::class, 'storeAdmin'])->name('admin.store.admin');
+    Route::post('/users/store/dosen', [UserController::class, 'storeDosen'])->name('admin.store.dosen');
+    Route::post('/users/store/mahasiswa', [UserController::class, 'storeMahasiswa'])->name('admin.store.mahasiswa');
+
+    // Edit routes - TAMBAHAN BARU
+    Route::get('/users/{user}/edit/admin', [UserController::class, 'editAdmin'])->name('admin.edit.admin');
+    Route::get('/users/{user}/edit/dosen', [UserController::class, 'editDosen'])->name('admin.edit.dosen');
+    Route::get('/users/{user}/edit/mahasiswa', [UserController::class, 'editMahasiswa'])->name('admin.edit.mahasiswa');
+
+    // Update routes - TAMBAHAN BARU
+    Route::put('/users/{user}/update/admin', [UserController::class, 'updateAdmin'])->name('admin.update.admin');
+    Route::put('/users/{user}/update/dosen', [UserController::class, 'updateDosen'])->name('admin.update.dosen');
+    Route::put('/users/{user}/update/mahasiswa', [UserController::class, 'updateMahasiswa'])->name('admin.update.mahasiswa');
+
+    // Show, Edit, Update, Delete (existing routes)
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.show');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('admin.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.destroy');
 
     // Manajemen Resource (CRUD Lengkap)
     Route::resource('tahun_ajar', TahunAjarController::class);
     Route::resource('program_studi', ProgramStudiController::class);
     Route::resource('bimbingan', BimbinganController::class);
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -121,8 +134,14 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 Route::middleware(['auth', 'role:2'])->prefix('dosen')->group(function () {
     // Dashboard Dosen
     Route::get('/dashboard', [DashboardDosenController::class, 'index'])->name('dosen.dashboard');
-
-    // Manajemen Profil Dosen
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/check-new-bimbingan', [DashboardDosenController::class, 'checkNewBimbingan'])->name('dosen.check-new-bimbingan');
+        Route::post('/tandai-dibaca/{id}', [DashboardDosenController::class, 'tandaiSudahDibaca'])->name('dosen.mark-as-read');
+        Route::post('/tandai-semua-dibaca', [DashboardDosenController::class, 'tandaiSemuaDibaca'])->name('dosen.mark-all-read');
+        Route::get('/statistik', [DashboardDosenController::class, 'getStatistik'])->name('dosen.statistik');
+        Route::get('/bimbingan/{status}', [DashboardDosenController::class, 'getBimbinganByStatus'])->name('dosen.bimbingan-by-status');
+    });
+    //profile
     Route::get('/profil', [DosenProfileController::class, 'edit'])->name('dosen.profile.edit');
     Route::post('/profil', [DosenProfileController::class, 'update'])->name('dosen.profile.update');
 
@@ -164,3 +183,5 @@ Route::middleware(['auth', 'role:3'])->prefix('mhs')->group(function () {
         // Manajemen Komentar Bimbingan
     Route::post('/bimbingan/{id_bimbingan}/komentar', [KomentarMahasiswaController::class, 'store'])->name('bim.komentar.store');
 });
+
+

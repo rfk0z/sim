@@ -109,45 +109,41 @@
                         <div>
                             <p class="text-sm text-gray-500 mb-2">Status Validasi</p>
                             @php
-                                $statusConfig = [
-                                    'Valid' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'border' => 'border-green-200'],
-                                    'Invalid' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'border' => 'border-red-200'],
-                                    'Pending' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'border' => 'border-yellow-200'],
-                                ];
-                                $config = $statusConfig[$bimbingan->status_validasi] ?? $statusConfig['Pending'];
-                            @endphp
-                            <span
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border {{ $config['bg'] }} {{ $config['text'] }} {{ $config['border'] }}">
-                                @switch($bimbingan->status_validasi)
-                                    @case('Valid')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                            <path d="M9 11l3 3L22 4" />
-                                        </svg>
-                                    @break
+    $statusConfig = [
+        'valid' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'border' => 'border-green-200'],
+        'invalid' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'border' => 'border-red-200'],
+        'pending' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'border' => 'border-yellow-200'],
+    ];
+    $status = strtolower($bimbingan->status_validasi);
+    $config = $statusConfig[$status] ?? $statusConfig['pending'];
+@endphp
+<span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border {{ $config['bg'] }} {{ $config['text'] }} {{ $config['border'] }}">
+    @switch($status)
+        @case('valid')
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <path d="M9 11l3 3L22 4" />
+            </svg>
+            Valid
+            @break
 
-                                    @case('Invalid')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="m15 9-6 6" />
-                                            <path d="m9 9 6 6" />
-                                        </svg>
-                                    @break
+        @case('invalid')
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+            </svg>
+            Invalid
+            @break
 
-                                    @default
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <polyline points="12,6 12,12 16,14" />
-                                        </svg>
-                                @endswitch
-                                {{ $bimbingan->status_validasi }}
-                            </span>
+        @default
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12,6 12,12 16,14" />
+            </svg>
+            Pending
+    @endswitch
+</span>
                         </div>
                     </div>
 
@@ -170,6 +166,7 @@
                 </div>
             </div>
         </div>
+
 
         {{-- Section Dokumen --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
@@ -254,8 +251,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex items-center space-x-3">
-                                            <button
-                                                @click="showPdf = true; pdfUrl = '{{ Storage::url($dokumen->file_path) }}'"
+                                            <button @click="showPdf = true; pdfUrl = '/{{ $dokumen->file_path }}'"
                                                 class="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
                                                 title="Lihat Detail">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -265,7 +261,7 @@
                                                     <circle cx="12" cy="12" r="3" />
                                                 </svg>
                                             </button>
-                                            <a href="{{ Storage::url($dokumen->file_path) }}" download
+                                            <a href="/{{ $dokumen->file_path }}" download
                                                 class="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition-colors duration-200"
                                                 title="Unduh">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -287,178 +283,189 @@
             @endif
         </div>
 
-{{-- Section Komentar --}}
-<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-    <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
-        <h3 class="text-lg font-semibold text-gray-900">Komentar Bimbingan</h3>
-    </div>
 
-    {{-- Scrollable Comments Area --}}
-    <div class="max-h-96 overflow-y-auto">
-        <div class="p-6">
-            @if ($bimbingan->komentar->isEmpty())
-                <div class="text-center py-12">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    <h4 class="text-lg font-medium text-gray-900 mb-2">Belum ada komentar</h4>
-                    <p class="text-gray-500">Tambahkan komentar pertama untuk bimbingan ini</p>
-                </div>
-            @else
-                <div class="space-y-6">
-                    @foreach ($bimbingan->komentar->sortBy('waktu_kirim') as $komentar)
-                        @if ($komentar->tipe_pengirim === 'dosen')
-                            {{-- Komentar Dosen - Kanan --}}
-                            <div class="flex items-start gap-4 justify-end">
-                                <div class="flex-1 max-w-xs sm:max-w-md">
-                                    <div class="bg-blue-50 border border-blue-200 rounded-lg rounded-tr-none p-4">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <div class="flex items-center gap-2">
-                                                <p class="text-sm font-semibold text-blue-900">
+        {{-- Section Komentar --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900">Komentar Bimbingan</h3>
+            </div>
+
+            {{-- Scrollable Comments Area --}}
+            <div class="max-h-96 overflow-y-auto">
+                <div class="p-6">
+                    @if ($bimbingan->komentar->isEmpty())
+                        <div class="text-center py-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">Belum ada komentar</h4>
+                            <p class="text-gray-500">Tambahkan komentar pertama untuk bimbingan ini</p>
+                        </div>
+                    @else
+                        <div class="space-y-6">
+                            @foreach ($bimbingan->komentar->sortBy('waktu_kirim') as $komentar)
+                                @if ($komentar->tipe_pengirim === 'dosen')
+                                    {{-- Komentar Dosen - Kanan --}}
+                                    <div class="flex items-start gap-4 justify-end">
+                                        <div class="flex-1 max-w-xs sm:max-w-md">
+                                            <div
+                                                class="bg-blue-50 border border-blue-200 rounded-lg rounded-tr-none p-4">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <p class="text-sm font-semibold text-blue-900">
+                                                            @if ($komentar->pengirim->dosen)
+                                                                {{ $komentar->pengirim->dosen->nama }}
+                                                            @else
+                                                                {{ $komentar->pengirim->name }}
+                                                            @endif
+                                                        </p>
+                                                        <span
+                                                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                            Dosen
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <p
+                                                    class="text-sm text-gray-700 whitespace-pre-line leading-relaxed mb-2">
+                                                    {{ $komentar->isi_komentar }}
+                                                </p>
+                                                @if ($komentar->lampiran_url)
+                                                    <div class="mt-3 pt-3 border-t border-blue-200">
+                                                        <a href="{{ $komentar->lampiran_url }}" target="_blank"
+                                                            class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg transition-colors duration-200">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="h-4 w-4 mr-2" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                                            </svg>
+                                                            Lihat Lampiran
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                <div class="mt-2 text-right">
+                                                    <p class="text-xs text-gray-500">
+                                                        {{ \Carbon\Carbon::parse($komentar->waktu_kirim)->diffForHumans() }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <div
+                                                class="h-12 w-12 rounded-full flex items-center justify-center shadow-sm bg-gradient-to-br from-blue-500 to-blue-600">
+                                                <span class="text-sm font-semibold text-white">
                                                     @if ($komentar->pengirim->dosen)
-                                                        {{ $komentar->pengirim->dosen->nama }}
+                                                        {{ substr($komentar->pengirim->dosen->nama, 0, 2) }}
                                                     @else
-                                                        {{ $komentar->pengirim->name }}
+                                                        {{ substr($komentar->pengirim->name, 0, 2) }}
                                                     @endif
-                                                </p>
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                    Dosen
                                                 </span>
                                             </div>
                                         </div>
-                                        <p class="text-sm text-gray-700 whitespace-pre-line leading-relaxed mb-2">
-                                            {{ $komentar->isi_komentar }}
-                                        </p>
-                                        @if ($komentar->lampiran_url)
-                                            <div class="mt-3 pt-3 border-t border-blue-200">
-                                                <a href="{{ $komentar->lampiran_url }}" target="_blank"
-                                                    class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg transition-colors duration-200">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                                    </svg>
-                                                    Lihat Lampiran
-                                                </a>
-                                            </div>
-                                        @endif
-                                        <div class="mt-2 text-right">
-                                            <p class="text-xs text-gray-500">
-                                                {{ \Carbon\Carbon::parse($komentar->waktu_kirim)->diffForHumans() }}
-                                            </p>
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <div class="h-12 w-12 rounded-full flex items-center justify-center shadow-sm bg-gradient-to-br from-blue-500 to-blue-600">
-                                        <span class="text-sm font-semibold text-white">
-                                            @if ($komentar->pengirim->dosen)
-                                                {{ substr($komentar->pengirim->dosen->nama, 0, 2) }}
-                                            @else
-                                                {{ substr($komentar->pengirim->name, 0, 2) }}
-                                            @endif
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                            {{-- Komentar Mahasiswa - Kiri --}}
-                            <div class="flex items-start gap-4 justify-start">
-                                <div class="flex-shrink-0">
-                                    <div class="h-12 w-12 rounded-full flex items-center justify-center shadow-sm bg-gradient-to-br from-green-500 to-green-600">
-                                        <span class="text-sm font-semibold text-white">
-                                            @if ($komentar->pengirim->mahasiswa)
-                                                {{ substr($komentar->pengirim->mahasiswa->nama, 0, 2) }}
-                                            @else
-                                                {{ substr($komentar->pengirim->name, 0, 2) }}
-                                            @endif
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex-1 max-w-xs sm:max-w-md">
-                                    <div class="bg-green-50 border border-green-200 rounded-lg rounded-tl-none p-4">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <div class="flex items-center gap-2">
-                                                <p class="text-sm font-semibold text-green-900">
+                                @else
+                                    {{-- Komentar Mahasiswa - Kiri --}}
+                                    <div class="flex items-start gap-4 justify-start">
+                                        <div class="flex-shrink-0">
+                                            <div
+                                                class="h-12 w-12 rounded-full flex items-center justify-center shadow-sm bg-gradient-to-br from-green-500 to-green-600">
+                                                <span class="text-sm font-semibold text-white">
                                                     @if ($komentar->pengirim->mahasiswa)
-                                                        {{ $komentar->pengirim->mahasiswa->nama }}
+                                                        {{ substr($komentar->pengirim->mahasiswa->nama, 0, 2) }}
                                                     @else
-                                                        {{ $komentar->pengirim->name }}
+                                                        {{ substr($komentar->pengirim->name, 0, 2) }}
                                                     @endif
-                                                </p>
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    Mahasiswa
                                                 </span>
                                             </div>
                                         </div>
-                                        <p class="text-sm text-gray-700 whitespace-pre-line leading-relaxed mb-2">
-                                            {{ $komentar->isi_komentar }}
-                                        </p>
-                                        @if ($komentar->lampiran_url)
-                                            <div class="mt-3 pt-3 border-t border-green-200">
-                                                <a href="{{ $komentar->lampiran_url }}" target="_blank"
-                                                    class="inline-flex items-center text-sm text-green-600 hover:text-green-800 hover:bg-green-100 px-3 py-1 rounded-lg transition-colors duration-200">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                                    </svg>
-                                                    Lihat Lampiran
-                                                </a>
+                                        <div class="flex-1 max-w-xs sm:max-w-md">
+                                            <div
+                                                class="bg-green-50 border border-green-200 rounded-lg rounded-tl-none p-4">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <p class="text-sm font-semibold text-green-900">
+                                                            @if ($komentar->pengirim->mahasiswa)
+                                                                {{ $komentar->pengirim->mahasiswa->nama }}
+                                                            @else
+                                                                {{ $komentar->pengirim->name }}
+                                                            @endif
+                                                        </p>
+                                                        <span
+                                                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            Mahasiswa
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <p
+                                                    class="text-sm text-gray-700 whitespace-pre-line leading-relaxed mb-2">
+                                                    {{ $komentar->isi_komentar }}
+                                                </p>
+                                                @if ($komentar->lampiran_url)
+                                                    <div class="mt-3 pt-3 border-t border-green-200">
+                                                        <a href="{{ $komentar->lampiran_url }}" target="_blank"
+                                                            class="inline-flex items-center text-sm text-green-600 hover:text-green-800 hover:bg-green-100 px-3 py-1 rounded-lg transition-colors duration-200">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="h-4 w-4 mr-2" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                                            </svg>
+                                                            Lihat Lampiran
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                <div class="mt-2">
+                                                    <p class="text-xs text-gray-500">
+                                                        {{ \Carbon\Carbon::parse($komentar->waktu_kirim)->diffForHumans() }}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        @endif
-                                        <div class="mt-2">
-                                            <p class="text-xs text-gray-500">
-                                                {{ \Carbon\Carbon::parse($komentar->waktu_kirim)->diffForHumans() }}
-                                            </p>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
-            @endif
-        </div>
-    </div>
+            </div>
 
-    {{-- Form Komentar --}}
-    <div class="px-6 py-5 border-t border-gray-200 bg-gray-50">
-        <form action="{{ route('bimbingan.komentar.store', $bimbingan->id_bimbingan) }}" method="POST"
-            class="space-y-4">
-            @csrf
-            <div>
-                <label for="komentar" class="block text-sm font-medium text-gray-700 mb-2">Tambah
-                    Komentar</label>
-                <textarea id="komentar" name="komentar" rows="4"
-                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none transition-colors duration-200"
-                    placeholder="Tulis komentar Anda..." required></textarea>
+            {{-- Form Komentar --}}
+            <div class="px-6 py-5 border-t border-gray-200 bg-gray-50">
+                <form action="{{ route('bimbingan.komentar.store', $bimbingan->id_bimbingan) }}" method="POST"
+                    class="space-y-4">
+                    @csrf
+                    <div>
+                        <label for="komentar" class="block text-sm font-medium text-gray-700 mb-2">Tambah
+                            Komentar</label>
+                        <textarea id="komentar" name="komentar" rows="4"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none transition-colors duration-200"
+                            placeholder="Tulis komentar Anda..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="lampiran_url" class="block text-sm font-medium text-gray-700 mb-2">Link Lampiran
+                            (Opsional)</label>
+                        <input type="url" id="lampiran_url" name="lampiran_url"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200"
+                            placeholder="https://example.com">
+                    </div>
+                    <div class="flex justify-center pt-2">
+                        <button type="submit"
+                            class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                            Kirim Komentar
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div>
-                <label for="lampiran_url" class="block text-sm font-medium text-gray-700 mb-2">Link Lampiran
-                    (Opsional)</label>
-                <input type="url" id="lampiran_url" name="lampiran_url"
-                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200"
-                    placeholder="https://example.com">
-            </div>
-            <div class="flex justify-center pt-2">
-                <button type="submit"
-                    class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
-                    Kirim Komentar
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
 
         {{-- Action Buttons --}}
         <div class="flex justify-end space-x-4 pb-8">

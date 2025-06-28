@@ -4,17 +4,14 @@
     {{-- Header Section --}}
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Detail Bimbingan</h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Detail Bimbingan</h1>
             <p class="text-gray-600 mt-1">Sesi bimbingan dengan {{ $bimbingan->dosen->nama }}</p>
         </div>
         <div class="flex justify-end">
             <a href="{{ route('mhs.bimbingan.index') }}"
-                class="inline-flex items-center px-5 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="mr-2">
-                    <path d="m12 19-7-7 7-7" />
-                    <path d="M19 12H5" />
+                class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 Kembali ke Daftar Bimbingan
             </a>
@@ -23,37 +20,31 @@
 
     {{-- Alert Messages --}}
     @if (session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-8 shadow-sm"
-            role="alert">
-            <div class="flex">
-                <div class="py-1">
-                    <svg class="fill-current h-5 w-5 text-green-600 mr-3" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
-                    </svg>
-                </div>
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-800 p-4 rounded-lg mb-6" role="alert">
+            <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
                 <div>
-                    <p class="font-semibold">Berhasil!</p>
-                    <p class="text-sm mt-1">{{ session('success') }}</p>
+                    <p class="font-medium">{{ session('success') }}</p>
                 </div>
             </div>
         </div>
     @endif
 
     <div x-data="{ showPdf: false, pdfUrl: '' }">
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
             {{-- Card Informasi Dosen --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-200 bg-gray-50">
                     <h3 class="text-lg font-semibold text-gray-900">Informasi Dosen Pembimbing</h3>
                 </div>
-                <div class="p-6 space-y-4">
+                <div class="p-5 space-y-4">
                     <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-14 w-14">
-                            <div class="h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+                        <div class="flex-shrink-0 h-12 w-12">
+                            <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
                                 <span class="text-lg font-semibold text-white">
-                                    {{ substr($bimbingan->dosen->nama, 0, 2) }}
+                                    {{ substr($bimbingan->dosen->nama, 0, 1) }}
                                 </span>
                             </div>
                         </div>
@@ -63,31 +54,28 @@
                         </div>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500 mb-1">NIDN</p>
-                        <p class="text-base font-medium text-gray-900">{{ $bimbingan->dosen->nidn }}</p>
+                        <p class="text-sm text-gray-500 mb-1">Fakultas</p>
+                        <p class="text-base font-medium text-gray-900">{{ $bimbingan->dosen->fakultas ?? 'Belum ditentukan' }}</p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500 mb-1">Program Studi</p>
-                        <p class="text-base font-medium text-gray-900">{{ $bimbingan->dosen->program_studi }}</p>
+                        <p class="text-sm text-gray-500 mb-1">Bidang Keahlian</p>
+                        <p class="text-base font-medium text-gray-900">{{ $bimbingan->dosen->bidang_keahlian ?? '-' }}</p>
                     </div>
                 </div>
             </div>
 
             {{-- Card Detail Bimbingan --}}
-            <div class="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+            <div class="xl:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-200 bg-gray-50">
                     <h3 class="text-lg font-semibold text-gray-900">Detail Bimbingan</h3>
                 </div>
-                <div class="p-6 space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-5 space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <p class="text-sm text-gray-500 mb-2">Tanggal Bimbingan</p>
                             <div class="flex items-center bg-gray-50 rounded-lg p-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-500">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 <p class="text-base font-medium text-gray-900">
                                     {{ \Carbon\Carbon::parse($bimbingan->tanggal)->isoFormat('dddd, D MMMM Y') }}
@@ -104,33 +92,23 @@
                                 ];
                                 $config = $statusConfig[$bimbingan->status_validasi] ?? $statusConfig['Pending'];
                             @endphp
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border {{ $config['bg'] }} {{ $config['text'] }} {{ $config['border'] }}">
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium {{ $config['bg'] }} {{ $config['text'] }} {{ $config['border'] }}">
                                 @switch($bimbingan->status_validasi)
                                     @case('Valid')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                            <path d="M9 11l3 3L22 4" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                         </svg>
                                     @break
 
                                     @case('Invalid')
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="m15 9-6 6" />
-                                            <path d="m9 9 6 6" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     @break
 
                                     @default
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <polyline points="12,6 12,12 16,14" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                 @endswitch
                                 {{ $bimbingan->status_validasi }}
@@ -146,10 +124,10 @@
                     </div>
 
                     <div>
-                        <p class="text-sm text-gray-500 mb-2">Catatan Dosen</p>
+                        <p class="text-sm text-gray-500 mb-2">Catatan Mahasiswa</p>
                         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                             <p class="text-base text-gray-900 whitespace-pre-line">
-                                {{ $bimbingan->catatan ?? 'Belum ada catatan dari dosen' }}
+                                {{ $bimbingan->catatan ?? 'Belum ada catatan dari Mahasiswa' }}
                             </p>
                         </div>
                     </div>
@@ -241,7 +219,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex items-center space-x-3">
                                             <button
-                                                @click="showPdf = true; pdfUrl = '{{ Storage::url($dokumen->file_path) }}'"
+                                                @click="showPdf = true; pdfUrl = '/{{ $dokumen->file_path }}'"
                                                 class="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
                                                 title="Lihat Detail">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -251,7 +229,7 @@
                                                     <circle cx="12" cy="12" r="3" />
                                                 </svg>
                                             </button>
-                                            <a href="{{ Storage::url($dokumen->file_path) }}" download
+                                            <a href="/{{ $dokumen->file_path }}" download
                                                 class="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition-colors duration-200"
                                                 title="Unduh">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"

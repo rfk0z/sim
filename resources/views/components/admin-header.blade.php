@@ -7,21 +7,11 @@
 
     <!-- Kanan: Notifikasi + Profil Dropdown -->
     <div class="flex items-center space-x-5">
-        <!-- Notifikasi -->
-        <button class="relative text-gray-600 hover:text-blue-600 transition">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M15 17h5l-1.4-1.4A2.1 2.1 0 0118 14.1V11a6 6 0 00-4-5.7V4a2 2 0 10-4 0v1.3A6 6 0 006 11v3.1c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span
-                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center border-2 border-white">3</span>
-        </button>
-
         <!-- Profil Dropdown -->
         <div class="relative" x-data="{ open: false }">
             <button @click="open = !open"
                 class="flex items-center space-x-2 hover:text-blue-600 px-3 py-1.5 rounded-full transition">
-                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : '/images/profil-default.jpg' }}"
+                <img src="{{ Auth::user()->foto ? asset('profile/admin/' . Auth::user()->foto) : '/images/profil-default.jpg' }}"
                     alt="User Avatar"
                     class="w-8 h-8 rounded-full object-cover border border-gray-300" />
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -50,21 +40,23 @@
                     Profil
                 </a>
 
-                <div class="border-t my-1 "></div>
+                <div class="border-t my-1"></div>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <div class="text-red-600 hover:bg-red-50">
-                        <button type="submit" class="flex items-center gap-2 px-4 py-2 text-sm ">
-                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" stroke-width="1.5"
-                                viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M20 12H8m12 0-4 4m4-4-4-4M9 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h2" />
-                            </svg>
-                            Keluar
-                        </button>
-                    </div>
+                    <button type="submit" class="w-full text-left">
+                        <div class="text-red-600 hover:bg-red-50">
+                            <div class="flex items-center gap-2 px-4 py-2 text-sm">
+                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M20 12H8m12 0-4 4m4-4-4-4M9 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h2" />
+                                </svg>
+                                Keluar
+                            </div>
+                        </div>
+                    </button>
                 </form>
             </div>
         </div>

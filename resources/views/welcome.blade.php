@@ -125,25 +125,25 @@
                         $items = [
                             [
                                 'title' => 'Profil Mahasiswa',
-                                'url' => '/profil-mahasiswa',
+                                'url' => '/mhs/profil',
                                 'icon' => '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
                                 'gradient' => 'from-[#27548A] to-[#1e4470]'
                             ],
                             [
                                 'title' => 'Progress Bimbingan',
-                                'url' => '/progress-bimbingan',
+                                'url' => '/mhs/bimbingan',
                                 'icon' => '<path d="M12 16v5"/><path d="M16 14v7"/><path d="M20 10v11"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18v3"/><path d="M8 14v7"/>',
                                 'gradient' => 'from-slate-600 to-slate-700'
                             ],
                             [
                                 'title' => 'Jadwal Konsultasi',
-                                'url' => '/jadwal-konsultasi',
+                                'url' => '/berita',
                                 'icon' => '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
                                 'gradient' => 'from-[#27548A] to-[#1e4470]'
                             ],
                             [
                                 'title' => 'Dokumen Tugas Akhir',
-                                'url' => '/dokumen-ta',
+                                'url' => '/mhs/bimbingan',
                                 'icon' => '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>',
                                 'gradient' => 'from-slate-600 to-slate-700'
                             ],
@@ -192,7 +192,7 @@
                             <p class="text-base sm:text-lg text-[#F3F3E0]/90 mb-6 sm:mb-8 leading-relaxed">
                                 Lakukan konsultasi dengan dosen pembimbing secara online, jadwal fleksibel dengan sistem monitoring yang terstruktur.
                             </p>
-                            <a href="/register"
+                            <a href="/register/mahasiswa"
                                 class="inline-block bg-[#F3F3E0] text-[#27548A] font-bold py-3 px-8 sm:py-4 sm:px-10 text-base sm:text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
                                 Mulai Konsultasi
                             </a>

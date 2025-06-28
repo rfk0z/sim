@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 class MhsProfileController extends Controller
@@ -46,18 +45,31 @@ class MhsProfileController extends Controller
         }
 
         if ($request->hasFile('foto')) {
-            if ($user->foto && Storage::exists('public/' . $user->foto)) {
-                Storage::delete('public/' . $user->foto);
+            $uploadPath = public_path('profile/mhs');
+
+            // Create directory if not exists
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
             }
 
-            $path = $request->file('foto')->store('foto-profil', 'public');
-            $user->foto = $path;
+            // Delete old photo if exists
+            if ($user->foto && file_exists($uploadPath.'/'.$user->foto)) {
+                unlink($uploadPath.'/'.$user->foto);
+            }
+
+            // Generate unique filename
+            $fileName = 'mhs_'.$user->id_user.'_'.time().'.'.$request->file('foto')->getClientOriginalExtension();
+
+            // Move uploaded file
+            $request->file('foto')->move($uploadPath, $fileName);
+
+            // Save only the filename in database
+            $user->foto = $fileName;
         }
 
         $user->save();
 
-        return response()->json([
-            'message' => 'Profil berhasil diperbarui.'
-        ]);
+        return redirect()->route('mhs.profile.edit')
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 }

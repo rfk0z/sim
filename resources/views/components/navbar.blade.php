@@ -25,37 +25,36 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
                 $bimbinganRoute = '';
                 $bimbinganItems = [];
                 switch(Auth::user()->role ?? 0) {
-                    case 1:
+                    case 1: // Admin
                         $bimbinganRoute = 'admin/bimbingan/*';
                         $bimbinganItems = [
+                            ['label' => 'Dashboard', 'href' => '/admin/dashboard'],
                             ['label' => 'Pengajuan Judul', 'href' => '/admin/bimbingan']
                         ];
                         break;
-                    case 2:
+                    case 2: // Dosen
                         $bimbinganRoute = 'dosen/bimbingan/*';
                         $bimbinganItems = [
+                            ['label' => 'Dashboard', 'href' => '/dosen/dashboard'],
                             ['label' => 'Pengajuan Judul', 'href' => '/dosen/bimbingan']
                         ];
                         break;
-                    case 3:
+                    case 3: // Mahasiswa
                         $bimbinganRoute = 'mhs/bimbingan/*';
                         $bimbinganItems = [
+                            ['label' => 'Dashboard', 'href' => '/mhs/dashboard'],
                             ['label' => 'Pengajuan Judul', 'href' => '/mhs/bimbingan']
                         ];
                         break;
                     default:
                         $bimbinganRoute = 'user/bimbingan/*';
                         $bimbinganItems = [
-                            ['label' => 'Pengajuan Judul', 'href' => '/login']
+                            ['label' => 'Login', 'href' => '/login']
                         ];
                 }
             @endphp
 
             <x-nav-link :dropdown="true" :active="request()->is($bimbinganRoute)" label="Bimbingan Online" :items="$bimbinganItems" />
-
-            <x-nav-link :dropdown="true" :active="request()->is('informasi/*')" label="Informasi" :items="[
-                ['label' => 'Pengumuman', 'href' => '/pengumuman'],
-            ]" />
         </div>
 
         <!-- Auth Button -->
@@ -63,7 +62,17 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
             <div x-data="{ open: false }" class="relative hidden md:block">
                 <button @click="open = !open" @click.away="open = false"
                     class="flex items-center space-x-2 px-3 py-2 rounded-lg text-white focus:outline-none hover:bg-white/10 transition hover:scale-105 duration-300">
-                    <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('default-avatar.png') }}"
+                    @php
+                        $avatarPath = 'default-avatar.png';
+                        if (Auth::user()->foto) {
+                            switch(Auth::user()->role) {
+                                case 1: $avatarPath = 'profile/admin/' . Auth::user()->foto; break;
+                                case 2: $avatarPath = 'profile/dosen/' . Auth::user()->foto; break;
+                                case 3: $avatarPath = 'profile/mhs/' . Auth::user()->foto; break;
+                            }
+                        }
+                    @endphp
+                    <img src="{{ asset($avatarPath) }}"
                         class="w-8 h-8 rounded-full object-cover" alt="Foto Profil">
                     <span class="font-medium">{{ Auth::user()->username }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -77,7 +86,7 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
                     class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-50 p-4">
 
                     <div class="flex flex-col items-center border-b border-gray-200 pb-4 mb-4">
-                        <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('default-avatar.png') }}"
+                        <img src="{{ asset($avatarPath) }}"
                             class="w-20 h-20 rounded-full object-cover mb-3" alt="Foto Profil">
                         <h3 class="text-lg font-semibold">{{ Auth::user()->username }}</h3>
                         <p class="text-sm text-gray-600 truncate max-w-full">{{ Auth::user()->email }}</p>
@@ -86,17 +95,10 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
                     @php
                         $profileRoute = '';
                         switch(Auth::user()->role) {
-                            case 1:
-                                $profileRoute = '/admin/profil';
-                                break;
-                            case 2:
-                                $profileRoute = '/dosen/profil';
-                                break;
-                            case 3:
-                                $profileRoute = '/mhs/profil';
-                                break;
-                            default:
-                                $profileRoute = '/profil';
+                            case 1: $profileRoute = '/admin/profil'; break;
+                            case 2: $profileRoute = '/dosen/profil'; break;
+                            case 3: $profileRoute = '/mhs/profil'; break;
+                            default: $profileRoute = '/profil';
                         }
                     @endphp
 
@@ -152,25 +154,31 @@ class="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-6 py-4
             @php
                 $mobileProfileRoute = '';
                 $mobileBimbinganRoute = '';
+                $mobileDashboardRoute = '';
                 switch(Auth::user()->role) {
                     case 1:
                         $mobileProfileRoute = '/admin/profil';
                         $mobileBimbinganRoute = '/admin/bimbingan';
+                        $mobileDashboardRoute = '/admin/dashboard';
                         break;
                     case 2:
                         $mobileProfileRoute = '/dosen/profil';
                         $mobileBimbinganRoute = '/dosen/bimbingan';
+                        $mobileDashboardRoute = '/dosen/dashboard';
                         break;
                     case 3:
                         $mobileProfileRoute = '/mhs/profil';
                         $mobileBimbinganRoute = '/mhs/bimbingan';
+                        $mobileDashboardRoute = '/mhs/dashboard';
                         break;
                     default:
                         $mobileProfileRoute = '/profil';
                         $mobileBimbinganRoute = '/login';
+                        $mobileDashboardRoute = '/login';
                 }
             @endphp
 
+            <a href="{{ $mobileDashboardRoute }}" class="block hover:text-[#D9A553] transition">Dashboard</a>
             <a href="{{ $mobileBimbinganRoute }}" class="block hover:text-[#D9A553] transition">Pengajuan Judul</a>
             <a href="{{ $mobileProfileRoute }}" class="block hover:text-[#D9A553] transition">Edit Profil</a>
 

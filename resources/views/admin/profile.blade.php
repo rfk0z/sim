@@ -22,23 +22,6 @@
                         class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500" />
                 </div>
 
-                <!-- NIM / NIDN -->
-                <template x-if="form.nim">
-                    <div class="space-y-3">
-                        <label class="block text-sm font-semibold text-gray-700">NIM</label>
-                        <input type="text" x-model="form.nim" readonly
-                            class="w-full px-4 py-2 border rounded-xl bg-gray-100 cursor-not-allowed" />
-                    </div>
-                </template>
-
-                <template x-if="form.nidn">
-                    <div class="space-y-3">
-                        <label class="block text-sm font-semibold text-gray-700">NIDN</label>
-                        <input type="text" x-model="form.nidn" readonly
-                            class="w-full px-4 py-2 border rounded-xl bg-gray-100 cursor-not-allowed" />
-                    </div>
-                </template>
-
                 <!-- Email -->
                 <div class="space-y-3">
                     <label class="block text-sm font-semibold text-gray-700">Email</label>
@@ -81,7 +64,7 @@
                         alt="Foto Profil">
 
                     <!-- Overlay Ganti Foto -->
-                    <input type="file" class="hidden" id="upload" @change="previewPhoto">
+                    <input type="file" class="hidden" id="upload" accept="image/jpeg,image/png" @change="previewPhoto">
                     <label for="upload"
                         class="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-sm font-medium rounded-full opacity-0 hover:opacity-100 transition cursor-pointer">
                         Ganti Foto
@@ -129,12 +112,10 @@
                     'nama' => $user->mahasiswa ? $user->mahasiswa->nama : ($user->dosen ? $user->dosen->nama : $user->username),
                     'email' => $user->email,
                     'password' => '',
-                    'nim' => $user->mahasiswa ? $user->mahasiswa->id_nim : null,
-                    'nidn' => $user->dosen ? $user->dosen->id_nidn : null,
                     'google_id' => $user->google_id,
                     'google_email' => $user->google_email,
-                    'google_avatar' => $user->foto ? asset('storage/' . $user->foto) : 'https://i.pravatar.cc/150?u=' . $user->id_user,
-                    'photo' => $user->foto ? asset('storage/' . $user->foto) : '/images/profil-default.jpg',
+                    'google_avatar' => $user->foto ? asset('profile/admin/' . $user->foto) : 'https://i.pravatar.cc/150?u=' . $user->id_user,
+                    'photo' => $user->foto ? asset('profile/admin/' . $user->foto) : '/images/profil-default.jpg',
                     'status_verifikasi' => $user->status_verifikasi,
                 ]),
                 form: {},
@@ -152,6 +133,13 @@
                 previewPhoto(e) {
                     const file = e.target.files[0];
                     if (!file) return;
+
+                    // Validasi ukuran file (max 2MB)
+                    if (file.size > 2048 * 1024) {
+                        alert('Ukuran file maksimal 2MB');
+                        return;
+                    }
+
                     const reader = new FileReader();
                     reader.onload = () => {
                         this.newPhoto = reader.result;
@@ -176,7 +164,7 @@
                     }
                     if (this.newPhoto) {
                         const blob = this.dataURLtoBlob(this.newPhoto);
-                        formData.append('foto', blob, 'foto.jpg');
+                        formData.append('foto', blob, 'profile.jpg');
                     }
 
                     fetch('{{ route('profile.update') }}', {
@@ -195,6 +183,9 @@
                             const data = JSON.parse(text);
                             alert(data.message);
                             this.original = JSON.parse(JSON.stringify(this.form));
+                            if (this.newPhoto) {
+                                this.original.photo = URL.createObjectURL(this.dataURLtoBlob(this.newPhoto));
+                            }
                             this.newPhoto = null;
                             this.hasChanged = false;
                         })
@@ -217,17 +208,17 @@
                 },
 
                 connectGoogle() {
-                    this.form.google_id = '123456';
-                    this.form.google_email = 'iki@gmail.com';
-                    this.form.google_avatar = 'https://i.pravatar.cc/150?u=iki';
-                    this.checkChanges();
+                    // Implementasi koneksi Google
+                    alert('Fitur koneksi Google akan diimplementasikan di sini');
                 },
 
                 disconnectGoogle() {
-                    this.form.google_id = null;
-                    this.form.google_email = '';
-                    this.form.google_avatar = '';
-                    this.checkChanges();
+                    if (confirm('Anda yakin ingin memutuskan koneksi Google?')) {
+                        this.form.google_id = null;
+                        this.form.google_email = '';
+                        this.form.google_avatar = '';
+                        this.checkChanges();
+                    }
                 }
             }))
         })

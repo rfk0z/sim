@@ -4,7 +4,7 @@ namespace App\Http\Controllers\mhs;
 use App\Http\Controllers\Controller;
 use App\Models\Bimbingan;
 use App\Models\Dokumen;
-use App\Models\Dosen; // Tambahkan import model Dosen
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ class MhsBimbinganController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:3'); // Hanya mahasiswa
+        $this->middleware('role:3');
     }
 
     public function index()
@@ -25,11 +25,11 @@ class MhsBimbinganController extends Controller
             return view('mhs.bimbingan.index', ['bimbingan' => collect()]);
         }
 
-        $nim = $user->mahasiswa->id_nim; // Changed from nim to id_nim
+        $nim = $user->mahasiswa->id_nim;
 
         $bimbingan = Bimbingan::with(['dosen', 'dokumen', 'komentar'])
             ->where('nim', $nim)
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc') // Changed to order by created_at
             ->paginate(10);
 
         return view('mhs.bimbingan.index', compact('bimbingan'));
@@ -43,7 +43,7 @@ class MhsBimbinganController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $nim = $user->mahasiswa->id_nim; // Changed from nim to id_nim
+        $nim = $user->mahasiswa->id_nim;
 
         $bimbingan = Bimbingan::with([
             'dosen',
@@ -67,7 +67,6 @@ class MhsBimbinganController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Ambil semua data dosen yang tersedia
         $dosen = Dosen::orderBy('nama', 'asc')->get();
 
         return view('mhs.bimbingan.create', compact('dosen'));
@@ -89,9 +88,8 @@ class MhsBimbinganController extends Controller
             'dokumen.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
 
-        $nim = $user->mahasiswa->id_nim; // Changed from nim to id_nim
+        $nim = $user->mahasiswa->id_nim;
 
-        // Insert langsung ke database tanpa timestamps
         $bimbinganId = DB::table('bimbingan')->insertGetId([
             'nim' => $nim,
             'nidn' => $request->nidn,
@@ -99,20 +97,29 @@ class MhsBimbinganController extends Controller
             'catatan' => $request->deskripsi,
             'tanggal' => $request->tanggal,
             'status_validasi' => 'Pending',
+            'created_at' => now(), // Added created_at
+            'updated_at' => now(), // Added updated_at
         ]);
 
-        // Buat object untuk kompatibilitas
         $bimbingan = (object)['id_bimbingan' => $bimbinganId];
 
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
-                $path = $file->store('dokumen_bimbingan', 'public');
+                // Create directory if not exists
+                if (!file_exists(public_path('doc'))) {
+                    mkdir(public_path('doc'), 0777, true);
+                }
+
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $file->move(public_path('doc'), $fileName);
 
                 Dokumen::create([
                     'id_bimbingan' => $bimbingan->id_bimbingan,
                     'nama_file' => $file->getClientOriginalName(),
-                    'file_path' => $path,
+                    'file_path' => 'doc/'.$fileName,
                     'uploaded_at' => now(),
+                    'created_at' => now(), // Added created_at
+                    'updated_at' => now(), // Added updated_at
                 ]);
             }
         }
@@ -129,14 +136,13 @@ class MhsBimbinganController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $nim = $user->mahasiswa->id_nim; // Changed from nim to id_nim
+        $nim = $user->mahasiswa->id_nim;
 
         $bimbingan = Bimbingan::with(['dokumen', 'komentar.pengirim'])
             ->where('nim', $nim)
-            ->where('status_validasi', 'Pending') // Hanya bisa edit yang masih pending
+            ->where('status_validasi', 'Pending')
             ->findOrFail($id);
 
-        // Ambil data dosen untuk dropdown di form edit
         $dosen = Dosen::orderBy('nama', 'asc')->get();
 
         return view('mhs.bimbingan.edit', compact('bimbingan', 'dosen'));
@@ -150,7 +156,7 @@ class MhsBimbinganController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $nim = $user->mahasiswa->id_nim; // Changed from nim to id_nim
+        $nim = $user->mahasiswa->id_nim;
 
         $request->validate([
             'topik' => 'required|string|max:255',
@@ -160,10 +166,9 @@ class MhsBimbinganController extends Controller
         ]);
 
         $bimbingan = Bimbingan::where('nim', $nim)
-            ->where('status_validasi', 'Pending') // Hanya bisa update yang masih pending
+            ->where('status_validasi', 'Pending')
             ->findOrFail($id);
 
-        // Update langsung ke database tanpa timestamps
         DB::table('bimbingan')
             ->where('id_bimbingan', $id)
             ->where('nim', $nim)
@@ -172,17 +177,26 @@ class MhsBimbinganController extends Controller
                 'topik' => $request->topik,
                 'catatan' => $request->deskripsi,
                 'tanggal' => $request->tanggal,
+                'updated_at' => now(), // Added updated_at
             ]);
 
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
-                $path = $file->store('dokumen_bimbingan', 'public');
+                // Create directory if not exists
+                if (!file_exists(public_path('doc'))) {
+                    mkdir(public_path('doc'), 0777, true);
+                }
+
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $file->move(public_path('doc'), $fileName);
 
                 Dokumen::create([
                     'id_bimbingan' => $bimbingan->id_bimbingan,
                     'nama_file' => $file->getClientOriginalName(),
-                    'file_path' => $path,
+                    'file_path' => 'doc/'.$fileName,
                     'uploaded_at' => now(),
+                    'created_at' => now(), // Added created_at
+                    'updated_at' => now(), // Added updated_at
                 ]);
             }
         }
@@ -199,16 +213,15 @@ class MhsBimbinganController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $nim = $user->mahasiswa->id_nim; // Changed from nim to id_nim
+        $nim = $user->mahasiswa->id_nim;
 
         $bimbingan = Bimbingan::where('nim', $nim)
-            ->where('status_validasi', 'Pending') // Hanya bisa hapus yang masih pending
+            ->where('status_validasi', 'Pending')
             ->findOrFail($id);
 
-        // Hapus dokumen terkait
         foreach ($bimbingan->dokumen as $dokumen) {
-            if (file_exists(storage_path('app/public/' . $dokumen->file_path))) {
-                unlink(storage_path('app/public/' . $dokumen->file_path));
+            if (file_exists(public_path($dokumen->file_path))) {
+                unlink(public_path($dokumen->file_path));
             }
             $dokumen->delete();
         }

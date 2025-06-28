@@ -51,12 +51,22 @@ class UserProfileController extends Controller
 
         // Update foto jika ada
         if ($request->hasFile('foto')) {
-            if ($user->foto && Storage::exists('public/' . $user->foto)) {
-                Storage::delete('public/' . $user->foto);
+            // Hapus foto lama jika ada
+            if ($user->foto && file_exists(public_path('profile/admin/' . $user->foto))) {
+                unlink(public_path('profile/admin/' . $user->foto));
             }
 
-            $path = $request->file('foto')->store('foto-profil', 'public');
-            $user->foto = $path;
+            // Buat direktori jika belum ada
+            if (!file_exists(public_path('profile/admin'))) {
+                mkdir(public_path('profile/admin'), 0755, true);
+            }
+
+            // Simpan file baru
+            $file = $request->file('foto');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('profile/admin'), $fileName);
+
+            $user->foto = $fileName;
         }
 
         $user->save();

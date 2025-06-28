@@ -13,8 +13,9 @@ return new class extends Migration {
             $table->date('tanggal');
             $table->text('topik');
             $table->text('catatan')->nullable();
-            $table->enum('status_validasi', ['pending', 'valid', 'invalid']);
+            $table->enum('status_validasi', ['pending', 'valid', 'invalid'])->default('pending');
             $table->string('dokumen_url', 255)->nullable();
+            $table->timestamps();
 
             $table->foreign('nim')->references('id_nim')->on('mahasiswas')->onDelete('cascade');
             $table->foreign('nidn')->references('id_nidn')->on('dosens')->onDelete('cascade');
@@ -25,4 +26,3 @@ return new class extends Migration {
         Schema::dropIfExists('bimbingan');
     }
 };
-

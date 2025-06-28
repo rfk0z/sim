@@ -83,7 +83,7 @@
                     </svg>
                     <span>Profil</span>
                 </a>
-                <a href="{{ route('user.list.index') }}"
+                <a href="{{ route('admin.users.index') }}"
                     class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('user.*') ? 'text-blue-600 font-semibold' : 'text-gray-800' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"

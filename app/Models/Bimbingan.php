@@ -22,15 +22,14 @@ class Bimbingan extends Model
         'catatan',
         'status_validasi',
         'dokumen_url',
+        'dibaca_oleh_dosen',
     ];
 
-    // Cast tanggal to date
     protected $casts = [
         'tanggal' => 'date',
+        'dibaca_oleh_dosen' => 'datetime',
     ];
 
-    // Enable timestamps (created_at and updated_at)
-    public $timestamps = false;
 
     /**
      * Relationship to Mahasiswa

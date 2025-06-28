@@ -8,7 +8,7 @@
                 <div class="text-sm font-medium text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="text-xs text-gray-500">{{ Auth::user()->role }}</div>
             </div>
-            <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : '/images/profil-default.jpg' }}"
+            <img src="{{ Auth::user()->foto ? asset('profile/mhs/' . Auth::user()->foto) : '/images/profil-default.jpg' }}"
                 alt="User Avatar"
                 class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"

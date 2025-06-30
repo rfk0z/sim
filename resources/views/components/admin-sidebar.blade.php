@@ -10,37 +10,43 @@
 
         <!-- Tombol Toggle Collapse -->
         <button @click="collapsed = !collapsed"
-                class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 flex-shrink-0"
-                :class="collapsed ? 'mx-auto' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="20" height="20"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 :class="collapsed ? 'rotate-180' : ''"
-                 class="transition-transform duration-300">
-                <path d="M11 17l-5-5 5-5"/>
-                <path d="M18 17l-5-5 5-5"/>
+            class="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 flex-shrink-0"
+            :class="collapsed ? 'mx-auto' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                :class="collapsed ? 'rotate-180' : ''" class="transition-transform duration-300">
+                <path d="M11 17l-5-5 5-5" />
+                <path d="M18 17l-5-5 5-5" />
             </svg>
         </button>
     </div>
 
     <!-- Menu -->
     <nav class="flex-1 px-3 py-4 space-y-2 text-gray-800 text-sm font-medium">
+        <a href="{{ route('dashboard.index') }}"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('dashboard.index') ? 'text-blue-600 font-semibold' : 'text-gray-800' }}"
+            :class="collapsed ? 'justify-center' : ''" :title="collapsed ? 'Dashboard' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-layout-dashboard flex-shrink-0" width="20"
+                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="7" height="9" x="3" y="3" rx="1" />
+                <rect width="7" height="5" x="14" y="3" rx="1" />
+                <rect width="7" height="9" x="14" y="12" rx="1" />
+                <rect width="7" height="5" x="3" y="16" rx="1" />
+            </svg>
+            <span x-show="!collapsed" class="transition-opacity duration-200">Dashboard</span>
+        </a>
 
         <!-- Kelola Akun -->
         <div x-data="{ open: {{ request()->routeIs('profile.*') || request()->routeIs('user.*') ? 'true' : 'false' }} }">
             <button @click="open = !open"
                 class="flex items-center justify-between w-full px-3 py-2 hover:bg-gray-100 rounded-lg transition-all"
-                :class="collapsed ? 'justify-center' : ''"
-                :title="collapsed ? 'Kelola Akun' : ''">
+                :class="collapsed ? 'justify-center' : ''" :title="collapsed ? 'Kelola Akun' : ''">
                 <div class="flex items-center gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                        stroke-linejoin="round" class="lucide lucide-user-round-cog-icon lucide-user-round-cog flex-shrink-0">
+                        stroke-linejoin="round"
+                        class="lucide lucide-user-round-cog-icon lucide-user-round-cog flex-shrink-0">
                         <path d="m14.305 19.53.923-.382" />
                         <path d="m15.228 16.852-.923-.383" />
                         <path d="m16.852 15.228-.383-.923" />
@@ -101,11 +107,10 @@
         <!-- Menu Tahun Ajar -->
         <a href="{{ route('tahun_ajar.index') }}"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('tahun_ajar.*') ? 'text-blue-600 font-semibold' : 'text-gray-800' }}"
-            :class="collapsed ? 'justify-center' : ''"
-            :title="collapsed ? 'Tahun Ajar' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-calendar-range-icon lucide-calendar-range flex-shrink-0">
+            :class="collapsed ? 'justify-center' : ''" :title="collapsed ? 'Tahun Ajar' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" class="lucide lucide-calendar-range-icon lucide-calendar-range flex-shrink-0">
                 <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
                 <line x1="16" x2="16" y1="2" y2="6" />
                 <line x1="8" x2="8" y1="2" y2="6" />
@@ -119,11 +124,10 @@
         <!-- Program Studi -->
         <a href="{{ route('program_studi.index') }}"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('program_studi.*') ? 'text-blue-600 font-semibold' : 'text-gray-800' }}"
-            :class="collapsed ? 'justify-center' : ''"
-            :title="collapsed ? 'Program Studi' : ''">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-book flex-shrink-0">
+            :class="collapsed ? 'justify-center' : ''" :title="collapsed ? 'Program Studi' : ''">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" class="lucide lucide-book flex-shrink-0">
                 <path d="M2 4v16a2 2 0 0 0 2 2h14" />
                 <path d="M22 6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6z" />
                 <path d="M8 2v4" />
@@ -135,8 +139,7 @@
         <!-- Menu Bimbingan -->
         <a href="{{ route('bimbingan.index') }}"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-100 transition-all {{ request()->routeIs('bimbingan.*') ? 'text-blue-600 font-semibold' : 'text-gray-800' }}"
-            :class="collapsed ? 'justify-center' : ''"
-            :title="collapsed ? 'Bimbingan' : ''">
+            :class="collapsed ? 'justify-center' : ''" :title="collapsed ? 'Bimbingan' : ''">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                 stroke-linejoin="round" class="lucide lucide-file-text flex-shrink-0">
@@ -155,9 +158,8 @@
         <form action="{{ route('logout') }}" method="POST" class="w-full">
             @csrf
             <button type="submit"
-                    class="flex items-center gap-3 px-3 py-2 w-full rounded-lg hover:text-red-600 hover:bg-gray-100 transition-all text-gray-800 text-sm font-medium"
-                    :class="collapsed ? 'justify-center' : ''"
-                    :title="collapsed ? 'Logout' : ''">
+                class="flex items-center gap-3 px-3 py-2 w-full rounded-lg hover:text-red-600 hover:bg-gray-100 transition-all text-gray-800 text-sm font-medium"
+                :class="collapsed ? 'justify-center' : ''" :title="collapsed ? 'Logout' : ''">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out flex-shrink-0">
